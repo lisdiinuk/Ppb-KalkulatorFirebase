@@ -1,6 +1,5 @@
 package com.example.kalkulatorfirebase;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -9,21 +8,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     EditText Input1, Input2;
-    Button BtnHtg;
+    Button BtnHitung;
     RadioGroup Group;
     android.widget.RadioButton RadioButton;
 
@@ -49,15 +41,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Intent intent = getIntent();
-        String MsgDel;
-        MsgDel = intent.getStringExtra("MsgDel");
-        if(MsgDel != null){
-            if(MsgDel == "0") {
+        String Psnn;
+        Psnn = intent.getStringExtra("Psnn");
+        if(Psnn != null){
+            if(Psnn == "0") {
                 Toast.makeText(MainActivity.this, "Data Gagal Dihapus", Toast.LENGTH_SHORT).show();
-                MsgDel = null;
+                Psnn = null;
             }else{
-                Toast.makeText(MainActivity.this, "Data Id " + MsgDel + " Berhasil Dihapus", Toast.LENGTH_SHORT).show();
-                MsgDel = null;
+                Toast.makeText(MainActivity.this, "Data Berhasil Dihapus", Toast.LENGTH_SHORT).show();
+                Psnn = null;
             }
         }
 
@@ -72,12 +64,12 @@ public class MainActivity extends AppCompatActivity {
 
         Input1 = findViewById(R.id.Input1);
         Input2 = findViewById(R.id.Input2);
-        BtnHtg = findViewById(R.id.btn_hitung);
+        BtnHitung = findViewById(R.id.btn_hitung);
         Group = findViewById(R.id.radioGroup);
 
-        BtnHtg.setOnClickListener(v -> {
+        BtnHitung.setOnClickListener(v -> {
             Double Result;
-            String Operand;
+            String operasi;
             int RadioId = Group.getCheckedRadioButtonId();
             RadioButton = findViewById(RadioId);
 
@@ -85,26 +77,26 @@ public class MainActivity extends AppCompatActivity {
 
             if (RadioButton.getText().equals("Bagi")) {
                 Result = Double.parseDouble(Input1.getText().toString()) / Double.parseDouble(Input2.getText().toString());
-                Operand = "/";
+                operasi = "/";
             } else if (RadioButton.getText().equals("Kurang")) {
                 Result = Double.parseDouble(Input1.getText().toString()) - Double.parseDouble(Input2.getText().toString());
-                Operand = "-";
+                operasi = "-";
             } else if (RadioButton.getText().equals("Kali")) {
                 Result = Double.parseDouble(Input1.getText().toString()) * Double.parseDouble(Input2.getText().toString());
-                Operand = "*";
+                operasi = "*";
             } else {
                 Result = Double.parseDouble(Input1.getText().toString()) + Double.parseDouble(Input2.getText().toString());
-                Operand = "+";
+                operasi = "+";
             }
 
 
-            TextView hasilField = findViewById(R.id.textView2);
+            TextView hasilField = findViewById(R.id.ResultField);
             hasilField.setText(" " + Result);
 
             Map<String, Object> hitung = new HashMap<>();
             hitung.put("Var1", Input1.getText().toString());
             hitung.put("Var2", Input2.getText().toString());
-            hitung.put("Operator", Operand);
+            hitung.put("Operator", operasi);
             hitung.put("Result", Result.toString());
 
             db.collection("data_hitung")
@@ -122,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                     })
-                    .addOnFailureListener(e -> Log.e("firebase-error", e.getMessage()));
+                    .addOnFailureListener(e -> Log.e("Error", e.getMessage()));
 
             DataHitung();
 
@@ -144,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                     } else {
-                        Log.w(TAG, "Error getting documents.", task.getException());
+                        Log.w(TAG, "Gagal Mengambil Data", task.getException());
                     }
                 });
     }

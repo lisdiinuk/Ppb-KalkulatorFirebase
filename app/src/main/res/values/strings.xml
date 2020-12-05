@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Kalkulator Firebase</string>
+    <string name="judul_on">Kalkulator Bagus</string>
+    <string name="_0">0</string>
+    <string name="hitung">Hitung</string>
+    <string name="tambah">Tambah</string>
+    <string name="kurang">Kurang</string>
+    <string name="kali">Kali</string>
+    <string name="bagi">Bagi</string>
+    <string name="textview">TextView</string>
+</resources>
